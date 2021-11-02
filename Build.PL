@@ -24,6 +24,7 @@ my $builder = Module::Build->new(
         'List::Util'                => 1.50,
         'File::Spec'                => 3.75,
         'Set::Scalar'               => 1.29,
+        'IPC::System::Simple'       => 1.25,
     },
     add_to_cleanup     => [ 'Bio-RNA-BarMap-*' ],
 );
