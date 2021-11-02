@@ -1,0 +1,21 @@
+name: barmap
+channels:
+  - file:////scr/bintang/felix/conda/conda-bld
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - perl
+  - perl-autodie
+  - perl-file-spec
+  - perl-module-build
+  - perl-moose
+  # - perl-moosex-strictconstructor
+  - perl-namespace-autoclean
+  - perl-ipc-system-simple
+  - perl-scalar-list-utils
+  - perl-set-scalar
+  - perl-test-fatal
+  - perl-test-needs
+prefix: /scr/bintang/felix/conda/envs/barmap
+
