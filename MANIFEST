@@ -1,14 +1,19 @@
 Build.PL
 Changes
 lib/Bio/RNA/BarMap.pm
+lib/Bio/RNA/BarMap/Mapping.pm
+lib/Bio/RNA/BarMap/Mapping/FileMappingEntry.pm
+lib/Bio/RNA/BarMap/Mapping/MinMappingEntry.pm
+lib/Bio/RNA/BarMap/Mapping/Set.pm
+lib/Bio/RNA/BarMap/Mapping/Type.pm
 MANIFEST			This list of files
+META.json
+META.yml
 README
 t/00-load.t
+t/10-barriers_file_names.t
+t/data/N1M7_barmap_1.out
 t/manifest.t
 t/pod-coverage.t
 t/pod.t
-t/10-barriers_file_names.t
-t/data/N1M7_barmap_1.out
 xt/boilerplate.t
-META.yml
-META.json
