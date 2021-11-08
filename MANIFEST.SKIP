@@ -14,5 +14,8 @@
 # Avoid archives of this distribution
 \bBio-RNA-BarMap-[\d\.\_]+
 
+# Version control
+[.]git/
+
  # Misc
 conda_env.yml
