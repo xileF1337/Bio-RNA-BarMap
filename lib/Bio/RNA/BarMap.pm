@@ -1,9 +1,10 @@
 package Bio::RNA::BarMap;
+our $VERSION = '0.01';
 
 use 5.012;
 use warnings;
 
-our $VERSION = '0.01';
+
 
 package Bio::RNA::BarMap::Mapping {
     use Moose;
