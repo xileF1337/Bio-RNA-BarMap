@@ -15,7 +15,9 @@
 \bBio-RNA-BarMap-[\d\.\_]+
 
 # Version control
-[.]git/
+\W?[.]git\b
+\W?[.]gitignore$
 
  # Misc
-conda_env.yml
+\bconda_env.yml$
+[.]swp$
