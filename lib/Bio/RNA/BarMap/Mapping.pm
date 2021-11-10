@@ -192,9 +192,7 @@ sub _get_min_entry_mins_and_types {
         my @arrows = $line =~ /[-~]>/g;
         # Convert arrows to strings. Append undef for last minimum
         # which is not mapped to anything (aligns indices or arrays).
-        ((map {Bio::RNA::BarMap::Mapping::Type->arrow_to_type($_)} @arrows),
-         undef
-        );
+        ((map {Bio::RNA::BarMap::Mapping::Type->new($_)} @arrows), undef);
     };
     my @mins = split /\s*[-~]>\s*/, $line;
     if ($mins[0] eq q{}) {              # drop empty first field
@@ -397,7 +395,7 @@ sub map_min {
             = $self->map_min_step($from_file, $from_min);
         # One approx mapping step makes entire mapping chain approx.
         $mapping_type = Bio::RNA::BarMap::Mapping::Type->approx
-        if Bio::RNA::BarMap::Mapping::Type->is_approx($current_mapping_type);
+        if $current_mapping_type->is_approx();
 
         return wantarray ? ($mapping_type, $next_min) : $next_min
             if $next_file eq $to_file;
@@ -423,8 +421,7 @@ sub get_mapping_arrow {
     my ($self, $from_file, $from_min, $to_file) = @_;
     my $mapping_type
         = $self->get_mapping_type($from_file, $from_min, $to_file);
-    my $mapping_arrow
-        = Bio::RNA::BarMap::Mapping::Type->type_to_arrow($mapping_type);
+    my $mapping_arrow = $mapping_type->arrow();
     return $mapping_arrow;
 }
 

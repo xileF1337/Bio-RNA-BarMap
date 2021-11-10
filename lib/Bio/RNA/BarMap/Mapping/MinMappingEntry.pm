@@ -17,15 +17,7 @@ has 'index' => (is => 'ro', required => 1);
 
 has 'to_type' => (
     is => 'rw',
-    isa => Moose::Meta::TypeConstraint::Enum->new(
-                name   => 'MappingType',
-                values => [
-                            Bio::RNA::BarMap::Mapping::Type->exact,
-                            Bio::RNA::BarMap::Mapping::Type->approx,
-                          ],
-           ),
-    # Maybe use enum 'EnumName', qw(val1 val2); from
-    # Moose::Util::TypeConstraints
+    isa => 'Bio::RNA::BarMap::Mapping::Type',
 );
 
 # Ensure object is cleaned after use => use weak refs
