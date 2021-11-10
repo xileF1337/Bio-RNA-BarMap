@@ -398,7 +398,7 @@ sub map_min {
         # One approx mapping step makes entire mapping chain approx.
         $mapping_type = Bio::RNA::BarMap::Mapping::Type->approx
         if Bio::RNA::BarMap::Mapping::Type->is_approx($current_mapping_type);
-            # if $current_mapping_type eq Bio::RNA::BarMap::Mapping::Type->approx;
+
         return wantarray ? ($mapping_type, $next_min) : $next_min
             if $next_file eq $to_file;
 
@@ -479,5 +479,7 @@ sub map_min_inv {
 }
 
 __PACKAGE__->meta->make_immutable;
+
+1;
 
 # End of Bio::RNA::BarMap::Mapping / Bio/RNA/BarMap/Mapping.pm

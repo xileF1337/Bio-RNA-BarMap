@@ -5,178 +5,22 @@ use 5.012;
 use warnings;
 
 use Bio::RNA::BarMap::Mapping;
+use Bio::RNA::BarMap::Mapping::Set;
+use Bio::RNA::BarMap::Mapping::MinMappingEntry;
+use Bio::RNA::BarMap::Mapping::Type;
+use Bio::RNA::BarMap::Mapping::FileMappingEntry;
 
-# A simple set class implemented using a hash. Supports storing references.
-# Faster then Set::Scalar for this specific use case. It significantly reduces
-# the runtime.
-package Bio::RNA::BarMap::Mapping::Set {
-    use warnings;
-    use v5.12;
-    use autodie qw(:all);
-
-    use Moose;
-    use MooseX::StrictConstructor;
-    use namespace::autoclean;
-    use List::Util qw(pairmap);
-
-    # Elements are stored in a hash ref. For simple values, key is the element
-    # and value is undef. For references, the key gets stringified and the
-    # value stores the actual reference.
-    has _elems => (is => "ro", init_arg => undef, default => sub { {} });
-
-    # Return all elements. If defined, use the value, else the key.
-    sub elements { pairmap {$b // $a} %{ $_[0]->_elems } }
-
-    # Insert elements into the set. Returns itself.
-    sub insert {
-        my $self = shift;
-        # Don't store simple values twice, but preserve references.
-        $self->_elems->{$_} = ref $_ ? $_ : undef foreach @_;
-        $self;
-    }
-
-    __PACKAGE__->meta->make_immutable;
-};  # Bio::RNA::BarMap::Mapping::Set
-
-
-# Min mapping hash entry. "to" and "from" are hash references
-package Bio::RNA::BarMap::Mapping::MinMappingEntry {
-    use Moose;
-    use namespace::autoclean;
-
-    use Scalar::Util qw( weaken );
-    use Set::Scalar;
-
-    has 'index' => (is => 'ro', required => 1);
-
-    has 'to_type' => (
-        is => 'rw',
-        isa => Moose::Meta::TypeConstraint::Enum->new(
-                    name   => 'MappingType',
-                    values => [
-                                Bio::RNA::BarMap::Mapping::Type->exact,
-                                Bio::RNA::BarMap::Mapping::Type->approx,
-                              ],
-               ),
-        # Maybe use enum 'EnumName', qw(val1 val2); from
-        # Moose::Util::TypeConstraints
-    );
-
-    # Ensure object is cleaned after use => use weak refs
-    # Init 'from' with empty array ref to immedtialey push to it.
-    # has '_from' => (is => 'ro', default => sub { Set::Scalar->new() });
-    has '_from' => (is => 'ro', default => sub { Bio::RNA::BarMap::Mapping::Set->new });
-    has 'to'    => (is => 'rw', weak_ref => 1, predicate => 'has_to');
-
-    # Always use this method to add 'from' minima. This ensures the refs
-    # are weakened and no memory leaks arise.
-    sub add_from {
-        my ($self, @from) = @_;
-        weaken $_ foreach @from;        # turn into weak references
-        $self->_from->insert(@from);
-    }
-
-    sub get_from {
-        my ($self) = @_;
-        my @from = $self->_from->elements;
-        return @from;
-    }
-
-    __PACKAGE__->meta->make_immutable;
-}   # Bio::RNA::BarMap::Mapping::MinMappingEntry
-
-
-# All methods are class methods, it's not meant to be instantiated. It just
-# manages the type name string and converts it to arrows, etc.
-package Bio::RNA::BarMap::Mapping::Type {
-    use Moose;
-    use namespace::autoclean;
-
-    # Returns the string used to characterize mappings as exact.
-    sub exact  { return __PACKAGE__ . '::EXACT';  }
-
-    # Returns the string used to characterize mappings as approximate.
-    sub approx { return __PACKAGE__ . '::APPROX'; }
-
-    # Prevent instantiation.
-    sub BUILD  { confess 'Not meant to be instantiated, or is it...?!'; }
-
-    # Returns true iff the passed string matches the EXACT type.
-    sub is_exact {
-        my ($class, $other) = @_;
-        my $is_exact = $other eq __PACKAGE__->exact;
-        return $is_exact;
-    }
-
-    # Returns true iff the passed string matches the APPROX type.
-    sub is_approx {
-        my ($class, $other) = @_;
-        my $is_approx = $other eq __PACKAGE__->approx;
-        return $is_approx;
-    }
-
-    # Convert arrows -> and ~> to the appropriate type (exact, approx, resp.).
-    # Arguments:
-    #   arrow: Arrow to convert.
-    # Returns the type name represented by the given arrow.
-    sub arrow_to_type {
-        my ($class, $arrow) = @_;
-        if ($arrow eq '->') {
-            return __PACKAGE__->exact;
-        }
-        elsif ($arrow eq '~>') {
-            return __PACKAGE__->approx;
-        }
-        else {
-            confess "Invalid arrow '$arrow'";
-        }
-    }
-
-    # Convert a given type name to the appropriate arrows -> and ~> (for the
-    # exact and approximate type, resp.).
-    # Arguments:
-    #   type: Name of the type to convert.
-    # Returns the arrow representing given type name.
-    sub type_to_arrow {
-        my ($class, $type) = @_;
-        if ($type eq __PACKAGE__->exact) {
-            return '->';
-        }
-        elsif ($type eq __PACKAGE__->approx) {
-            return '~>';
-        }
-        else {
-            confess "Invalid type '$type'";
-        }
-    }
-    __PACKAGE__->meta->make_immutable;
-}   # Bio::RNA::BarMap::Mapping::Type
-
-
-# Mini class for entries of the file mapping hash
-package Bio::RNA::BarMap::Mapping::FileMappingEntry {
-    use Moose;
-    use namespace::autoclean;
-
-    has 'name' => (is => 'ro', required => 1);
-    # Ensure object is cleaned after use => use weak refs
-    has [qw(from to)] => (is => 'rw', weak_ref => 1);
-
-    __PACKAGE__->meta->make_immutable;
-}   # Bio::RNA::BarMap::Mapping::FileMappingEntry
-
+1;
 
 __END__
 
+=pod
+
+=encoding UTF-8
+
 =head1 NAME
 
-Bio::RNA::BarMap - A class for parsing and working with BarMap output.
-
-=head1 VERSION
-
-Version 0.01
-
-=cut
+Bio::RNA::BarMap - Parse and apply BarMap mappings.
 
 =head1 SYNOPSIS
 
@@ -217,9 +61,11 @@ file generated by the RNA kinetics simulation tool BarMap.
     print "Mapping arrow: ",
           Bio::RNA::BarMap::Mapping::Type->type_to_arrow($mapping_type), "\n";
 
+=head1 DESCRIPTION
 
+TODO!!!
 
-=head1 Methods of C<Bio::RNA::BarMap::Mapping>
+=head1 CLASSES & METHODS
 
 Stores the actual mapping file created by BarMap. Can map minima from one
 Barriers file to another.
