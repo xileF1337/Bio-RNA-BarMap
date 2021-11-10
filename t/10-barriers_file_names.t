@@ -22,8 +22,6 @@ my $expected_barriers_file_count = 32;
 
 SKIP:
 {
-    # skip 'Not yet implemented!', 2;
-
     # Check we found all bar files in the mapping file, and their names are
     # non-zero.
     can_ok $bar_mapping, 'mapped_files';
