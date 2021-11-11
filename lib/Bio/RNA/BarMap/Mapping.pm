@@ -30,10 +30,12 @@ has '_file_mapping' => (
 );
 
 # Array for keeping the order.
-has 'mapped_files' => (
+has '_mapped_files' => (
     is       => 'ro',
     required => 1,
 );
+
+sub mapped_files { return @{ $_[0]->_mapped_files } }     # dereference
 
 has 'file_name' => (
     is        => 'ro',
@@ -80,7 +82,7 @@ sub _build_path_builder {
 # mapping.
 sub first_mapped_file {
     my $self = shift;
-    my $first_file = $self->mapped_files->[0];
+    my $first_file = $self->_mapped_files->[0];
     return $first_file;
 }
 
@@ -126,8 +128,8 @@ around BUILDARGS => sub {
         my ($min_mapping, $mapped_files)
             = $class->_process_barmap_file($data_handle);
         push @args, (
-             _min_mapping => $min_mapping,
-             mapped_files => $mapped_files,
+             _min_mapping  => $min_mapping,
+             _mapped_files => $mapped_files,
         );
     }
     else {
@@ -146,7 +148,7 @@ sub BUILD {
 sub _build_file_mapping {
     my ($self) = @_;
     # my ($to_file, $from_file, );
-    my @mapped_files = @{ $self->mapped_files };
+    my @mapped_files = $self->mapped_files;
 
     # Construct mapping entry objects
     my %mapping
