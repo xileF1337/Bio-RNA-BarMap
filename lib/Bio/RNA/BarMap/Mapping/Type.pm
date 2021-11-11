@@ -12,8 +12,9 @@ use namespace::autoclean;
 
 
 has '_type' => (
-    is  => 'ro',
-    isa => enum [qw(EXACT APPROX)],
+    is       => 'ro',
+    isa      => enum([qw(EXACT APPROX)]),
+    required => 1,
 );
 
 # Only allow construction from a single arrow string.
