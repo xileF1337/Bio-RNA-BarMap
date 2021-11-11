@@ -25,7 +25,7 @@ SKIP:
     # Check we found all bar files in the mapping file, and their names are
     # non-zero.
     can_ok $bar_mapping, 'mapped_files';
-    my @barriers_files      = @{ $bar_mapping->mapped_files };
+    my @barriers_files      = $bar_mapping->mapped_files;
     my $barriers_file_count = @barriers_files;
     cmp_ok $barriers_file_count,
            '==',
