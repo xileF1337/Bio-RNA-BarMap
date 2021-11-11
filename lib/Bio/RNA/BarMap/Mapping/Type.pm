@@ -21,20 +21,19 @@ around BUILDARGS => sub {
     my $orig  = shift;
     my $class = shift;
 
-    if (@_ == 1 and not ref $_[0]) {        # arrow string passed
-        my $arrow = shift;
-        if ($arrow eq '->') {
-            $class->$orig(_type => 'EXACT')
-        }
-        elsif ($arrow eq '~>') {
-            $class->$orig(_type => 'APPROX')
-        }
-        else {
-            confess 'Unknown arrow string in constructor';
-        }
-    }
+    confess 'Pass a single arrow string to construct a Mapping::Type object'
+        if @_ != 1 or ref $_[0];
 
-    confess 'Pass a single arrow string to construct a Mapping::Type object';
+    my $arrow = shift;                              # arrow string passed
+    if ($arrow eq '->') {
+        return $class->$orig(_type => 'EXACT')
+    }
+    elsif ($arrow eq '~>') {
+        return $class->$orig(_type => 'APPROX')
+    }
+    else {
+        confess 'Unknown arrow string in constructor';
+    }
 };
 
 # Returns a new mapping type object of type 'exact'.
