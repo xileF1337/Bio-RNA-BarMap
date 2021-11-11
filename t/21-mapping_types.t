@@ -22,12 +22,11 @@ SKIP:
     my $bar_mapping = Bio::RNA::BarMap::Mapping->new($barfh);
 
     subtest 'Mapping::Type provides mapping type methods' => sub {
-        plan tests => 4;
+        plan tests => 3;
 
         can_ok 'Bio::RNA::BarMap::Mapping::Type', 'is_exact';
         can_ok 'Bio::RNA::BarMap::Mapping::Type', 'is_approx';
-        can_ok 'Bio::RNA::BarMap::Mapping::Type', 'arrow_to_type';
-        can_ok 'Bio::RNA::BarMap::Mapping::Type', 'type_to_arrow';
+        can_ok 'Bio::RNA::BarMap::Mapping::Type', 'arrow';
     };
 
     # Test whether the single-step mapping has the correct type (i.e. exact or
@@ -54,14 +53,14 @@ SKIP:
 
             # Arrow '->' means exact mapping, '~>' means approx mapping.
             my $has_correct_type = $true_arrow eq '->'
-                ? Bio::RNA::BarMap::Mapping::Type->is_exact( $mapping_type)
-                : Bio::RNA::BarMap::Mapping::Type->is_approx($mapping_type)
+                ? $mapping_type->is_exact()
+                : $mapping_type->is_approx()
                 ;
             ok $has_correct_type,
                "Mapping type of min $from_min from $from_file";
 
             # Compare arrow strings.
-            my $arrow = Bio::RNA::BarMap::Mapping::Type->type_to_arrow($mapping_type);
+            my $arrow = $mapping_type->arrow();
             is $arrow, $true_arrow, "Arrow of min $from_min from $from_file";
         }
     };
@@ -100,8 +99,8 @@ SKIP:
 
             # Arrow '->' means exact mapping, '~>' means approx mapping.
             my $has_correct_type = $true_arrow eq '->'
-                ? Bio::RNA::BarMap::Mapping::Type->is_exact( $mapping_type)
-                : Bio::RNA::BarMap::Mapping::Type->is_approx($mapping_type)
+                ? $mapping_type->is_exact()
+                : $mapping_type->is_approx()
                 ;
             ok $has_correct_type,
                "Mapping type of min $from_min from file $from_file to $to_file";
@@ -110,14 +109,14 @@ SKIP:
             my $mapping_type_direct = $bar_mapping->get_mapping_type(
                 $from_file, $from_min, $to_file);
             my $has_correct_type_direct = $true_arrow eq '->'
-                ? Bio::RNA::BarMap::Mapping::Type->is_exact( $mapping_type_direct)
-                : Bio::RNA::BarMap::Mapping::Type->is_approx($mapping_type_direct)
+                ? $mapping_type_direct->is_exact()
+                : $mapping_type_direct->is_approx()
                 ;
             ok $has_correct_type_direct,
                "Mapping type of min $from_min (get_mapping_type())";
 
             # Compare arrow strings.
-            my $arrow = Bio::RNA::BarMap::Mapping::Type->type_to_arrow($mapping_type);
+            my $arrow = $mapping_type->arrow();
             is $arrow, $true_arrow, "Arrow of min $from_min from $from_file to $to_file";
 
             # Use convenience method for arrow.
