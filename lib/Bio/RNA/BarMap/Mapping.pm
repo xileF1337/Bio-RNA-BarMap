@@ -297,8 +297,7 @@ sub map_file {
         unless defined $file_map;
 
     return defined $file_map->to ? $file_map->to->name
-                                 : undef
-                                 ;
+                                 : undef;
 }
 
 # Given a path to Barriers file, map the Barriers file to its immediate
@@ -324,9 +323,11 @@ sub map_file_inv {
     my ($self, $to_file) = @_;
 
     my $file_map = $self->_file_mapping->{$to_file};
-    return defined $file_map ? $file_map->from->name
-                             : undef;
+    confess "Cannot map file '$to_file': not contained in BarMap file"
+        unless defined $file_map;
 
+    return defined $file_map->from ? $file_map->from->name
+                                   : undef;
 }
 
 # Given a path to Barriers file, (inversely) map the Barriers file to its
