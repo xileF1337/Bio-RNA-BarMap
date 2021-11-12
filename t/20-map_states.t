@@ -9,7 +9,7 @@ use File::Spec::Functions;
 
 use Bio::RNA::BarMap;
 
-my $test_count = 5;
+my $test_count = 6;
 plan tests => $test_count;
 
 my $barfile = catfile qw(t data N1M7_barmap_1.out);
@@ -21,6 +21,26 @@ SKIP:
 {
     # Construct mapping object.
     my $bar_mapping = Bio::RNA::BarMap::Mapping->new($barfh);
+
+    subtest 'Mapped minima of bar file' => sub {
+        plan tests => 3;
+
+        # mapped_mins method available
+        can_ok $bar_mapping, 'mapped_mins';
+
+        # Do we get the mins we expect?
+        my $bar_file      = '21.bar';
+        my @mins_mapped   = $bar_mapping->mapped_mins($bar_file);
+        my @mins_expected = 1..34;
+        is_deeply \@mins_mapped,
+                  \@mins_expected,
+                  "mins of file '$bar_file' returned";
+
+        # Throws on invalid Barriers file.
+        throws_ok {$bar_mapping->mapped_mins('foo.bar')}
+                  qr{File '.*' not found in mapping},
+                  'throws when Barriers file not found';
+    };
 
     subtest 'Mapping provides mapping methods' => sub {
         plan tests => 2;

@@ -10,7 +10,7 @@ use File::Spec::Functions;
 use Bio::RNA::BarMap;
 
 
-my $test_count = 4;
+my $test_count = 5;
 plan tests => $test_count;
 
 my $barfile = catfile qw(t data N1M7_barmap_1.out);
@@ -27,6 +27,7 @@ SKIP:
     # Check for mapping methods
     subtest 'Mapping has file mapping methods' => sub {
         can_ok $bar_mapping, 'mapped_files';
+        can_ok $bar_mapping, 'first_mapped_file';
         can_ok $bar_mapping, 'map_file';
         can_ok $bar_mapping, 'map_file_inv';
     };
@@ -49,6 +50,19 @@ SKIP:
                $expected_barriers_file_count,
                "Barriers file names are defined and non-empty",
                ;
+    };
+
+    subtest 'first_mapped_file() ' => sub {
+        plan tests => 2;
+
+        my $first_file_mapped_files = ($bar_mapping->mapped_files)[0];
+        is $bar_mapping->first_mapped_file,
+           $first_file_mapped_files,
+           'first_mapped_file() returns mapped_files[0]';
+
+        is '8.bar',
+           $first_file_mapped_files,
+           'first_mapped_file() returns 8.bar';
     };
 
     subtest 'map_file' => sub {
