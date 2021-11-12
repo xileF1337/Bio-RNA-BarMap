@@ -28,29 +28,29 @@ Bio::RNA::BarMap - Parse and query I<BarMap> mappings.
     use Bio::RNA::BarMap;
 
     # Parse a BarMap output file.
-    my $barmap_file = 'barmap.out';
+    my $barmap_file = 'N1M7_barmap_1.out';     # e.g. the test data in t/data/
     my $mapping = Bio::RNA::BarMap::Mapping->new($barmap_file);
 
     # Print mapped Barriers files.
     say join q{ }, $mapping->mapped_files;
 
     # Map a file.
-    my $from_file = '5.bar';            # one of the mapped .bar files
+    my $from_file = '8.bar';            # one of the mapped .bar files
     my $to_file = $mapping->map_file($from_file);   # last file maps to undef
     say "$from_file is mapped to ", $to_file // "nothing";
 
-    # Map minimum 3 from file 5.bar to the next file.
-    my $from_min = 3;
+    # Map minimum 2 from file 8.bar to the next file.
+    my $from_min = 2;
     my $to_min = $mapping->map_min_step($from_file, $from_min);
 
     # Map to an arbitrary file (only forward direction!)
-    $to_file = '10.bar';
+    $to_file = '15.bar';
     $to_min = $mapping->map_min($from_file, $from_min, $to_file);
 
     # Verify mapping type: is the mapping exact (->) or approximate (~>)?
     my ($type, $to_min2) = $mapping->map_min_step($from_file, $from_min);
-    say "Min $from_min from file '$from_file' is mapped",
-         $type->is_exact  ? 'exactly' : 'approximately';
+    say "Min $from_min from file '$from_file' is mapped ",
+         $type->is_exact  ? 'exactly' : 'approximately', " to min $to_min2";
     say "Mapping arrow: ", $type->arrow;
 
 =head1 DESCRIPTION
