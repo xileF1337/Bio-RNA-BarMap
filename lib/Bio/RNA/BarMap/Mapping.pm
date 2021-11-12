@@ -359,12 +359,18 @@ sub map_path_inv {
 sub map_min_step {
     my ($self, $from_file, $from_min) = @_;
 
-    # If from_file is the final barriers file, the state won't map.
-    # TODO better check whether from_file maps to a valid file? But this
-    # is doubled work when called from map_min...
-    my $to_map = $self->_min_mapping->{$from_file}{$from_min};
-    return if not defined $to_map or not defined $to_map->to;
+    # Get mappings of from_file.
+    my $min_mapping = $self->_min_mapping->{$from_file}
+        // confess "File '$from_file' not found in mapping";
 
+    # Get mapping of from_min in from_file.
+    my $to_map = $min_mapping->{$from_min}
+        // confess "Minimum $from_min not found in file '$from_file'";
+
+    # If from_file is the final barriers file, the state won't map.
+    return if not defined $to_map->to;
+
+    # Map minimum.
     my $to_index        = $to_map->to->index;
     my $to_mapping_type = $to_map->to_type;
 
@@ -406,7 +412,7 @@ sub map_min {
         ($from_file, $from_min) = ($next_file, $next_min);
         # destination file not reached yet, continue
     }
-    confess "map_min: '$_[1]' is not mapped to '$to_file'";
+    confess "File '$_[1]' is not mapped to file '$to_file'";
 }
 
 # Convenience wrapper for map_min() which only returns the mapping type,
