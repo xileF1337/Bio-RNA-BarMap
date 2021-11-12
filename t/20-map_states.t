@@ -4,11 +4,12 @@ use strict;
 use warnings;
 
 use Test::More;
+use Test::Exception;
 use File::Spec::Functions;
 
 use Bio::RNA::BarMap;
 
-my $test_count = 3;
+my $test_count = 5;
 plan tests => $test_count;
 
 my $barfile = catfile qw(t data N1M7_barmap_1.out);
@@ -48,6 +49,19 @@ SKIP:
         }
     };
 
+    # Try to map non-existent minima and files (single-step)
+    subtest 'Map minima, single step: exceptions' => sub {
+        plan tests => 2;
+
+        # Non-mapped Barriers file.
+        throws_ok {$bar_mapping->map_min_step('foo.bar', 2)}
+                  qr{File '.*' not found in mapping},
+                  'Non-existent source bar file throws';
+        throws_ok {$bar_mapping->map_min_step('9.bar', 123456)}
+                  qr{Minimum .* not found in file '.*'},
+                  'Non-existent minimum throws';
+    };
+
     # Map to an arbitrary file (in forward direction!)
     subtest 'Map minima, multi-step' => sub {
         my $from_file = '30.bar';
@@ -67,6 +81,23 @@ SKIP:
             cmp_ok $to_min, '==', $true_to_min,
                    "min $from_min from $from_file maps to $true_to_min in $to_file";
         }
+    };
+
+    # Try to map non-existent minima and files (multi-step)
+    subtest 'Map minima, multi-step: exceptions' => sub {
+        plan tests => 3;
+
+        throws_ok {$bar_mapping->map_min('foo.bar', 1, '10.bar')}
+                  qr{Cannot map file '.*': not contained in BarMap file},
+                  'Non-existent source bar file throws';
+
+        throws_ok {$bar_mapping->map_min('9.bar', 1, 'foo.bar')}
+                  qr{File '.*' is not mapped to file '.*'},
+                  'Non-existent target bar file throws';
+
+        throws_ok {$bar_mapping->map_min('9.bar', 1234567, '12.bar')}
+                  qr{Minimum .* not found in file '.*'},
+                  'Non-existent minimum throws';
     };
 }
 
