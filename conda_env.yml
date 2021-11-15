@@ -15,6 +15,7 @@ dependencies:
   - perl-ipc-system-simple
   - perl-scalar-list-utils
   - perl-set-scalar
+  - perl-test-exception
   - perl-test-fatal
   - perl-test-needs
 prefix: /scr/bintang/felix/conda/envs/barmap
