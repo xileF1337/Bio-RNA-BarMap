@@ -21,9 +21,10 @@ has 'to_type' => (
 );
 
 # Ensure object is cleaned after use => use weak refs
-has '_from' => (
-    is      => 'ro',
-    default => sub { Bio::RNA::BarMap::Mapping::Set->new },
+has '_from'  => (
+    is       => 'ro',
+    init_arg => undef,      # use add_from() method to add elements
+    default  => sub { Bio::RNA::BarMap::Mapping::Set->new },
 );
 
 has 'to' => (
