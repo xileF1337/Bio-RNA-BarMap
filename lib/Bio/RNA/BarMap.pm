@@ -150,5 +150,5 @@ along with this program.  If not, see L<http://www.gnu.org/licenses/>.
 
 =cut
 
-1; # End of Bio::RNA::BarMap
+# End of Bio/RNA/BarMap.pm
 
