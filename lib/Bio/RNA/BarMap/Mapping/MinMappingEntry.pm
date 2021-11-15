@@ -1,4 +1,5 @@
-# Min mapping hash entry. "to" and "from" are hash references.
+# Bio/RNA/BarMap/Mapping/MinMappingEntry.pm
+
 package Bio::RNA::BarMap::Mapping::MinMappingEntry;
 our $VERSION = '0.01';
 
@@ -90,9 +91,8 @@ Internal class used to store the mapping of a single minimum. Both the forward
 direction ("target minimum", C<to()>) and the reverse direction ("source
 minima", C<get_from()>) are provided. While the target minimum is unique, but
 not necessarily defined (cf. C<has_to()>), there may be zero to many source
-minima, and so these are stored in a set internally. Use the provided
-methods to add to this set to make sure that the stored references are
-properly weakened and no memory leaks arise.
+minima, and so these are stored in a set internally. Use C<add_from()> to add
+to this set.
 
 =head1 METHODS
 
@@ -112,21 +112,51 @@ Required. Index of the minimum described by this entry.
 
 =item to
 
+Optional. Reference to mapping entry object describing the minimum that this
+minimum is mapped to.
+
+=back
+
+=item Non-argument:
+
+=over
+
+=item from
+
+To add source minima (i. e. minima that are mapped to this minimum), use the
+method C<add_from()> instead.
+
 =back
 
 =back
 
 =head2 $entry->index
 
+Index of the minimum this entry is representing.
+
 =head2 $entry->to_type
+
+Type of the "to" mapping, either exact or approximate. Object of type
+L<Bio::RNA::BarMap::Mapping::Type>.
 
 =head2 $entry->to
 
+Returns the entry this minimum is being mapped to. May be C<undef>.
+
+=head2 $entry->to($to_min_entry)
+
+Sets the C<to> attribute to point to C<$to_min_entry>.
+
 =head2 $entry->add_from(@from_entries)
+
+Adds entries to the set of source minima, i. e. those that are mapped to this
+minimum. This method makes sure that the stored references are properly
+weakened and no memory leaks arise.
 
 =head2 $entry->get_from
 
-
+Returns the entries of minima that are mapped to this minimum, as stored in
+the source minima set.
 
 =head1 AUTHOR
 
@@ -135,8 +165,8 @@ Felix Kuehnl, C<< <felix at bioinf.uni-leipzig.de> >>
 
 =head1 BUGS
 
-Please report any bugs or feature requests to C<bug-bio-rna-barmap at
-rt.cpan.org>, or through the web interface at
+Please report any bugs or feature requests to
+C<bug-bio-rna-barmap at rt.cpan.org>, or through the web interface at
 L<https://rt.cpan.org/NoAuth/ReportBug.html?Queue=Bio-RNA-BarMap>.  I will be
 notified, and then you'll automatically be notified of progress on your bug as
 I make changes.
