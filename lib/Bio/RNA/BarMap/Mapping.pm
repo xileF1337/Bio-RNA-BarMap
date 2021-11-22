@@ -654,8 +654,11 @@ Felix Kuehnl, C<< <felix at bioinf.uni-leipzig.de> >>
 
 =head1 BUGS
 
-Please report any bugs or feature requests to C<bug-bio-rna-barmap at
-rt.cpan.org>, or through the web interface at
+Please report any bugs or feature requests by raising an issue at
+L<https://github.com/xileF1337/Bio-RNA-BarMap/issues>.
+
+You can also do so by mailing to C<bug-bio-rna-barmap at rt.cpan.org>,
+or through the web interface at
 L<https://rt.cpan.org/NoAuth/ReportBug.html?Queue=Bio-RNA-BarMap>.  I will be
 notified, and then you'll automatically be notified of progress on your bug as
 I make changes.
@@ -674,6 +677,10 @@ L<https://www.tbi.univie.ac.at/RNA/bar_map/>
 
 
 =over 4
+
+=item * Github: the official repository
+
+L<https://github.com/xileF1337/Bio-RNA-BarMap>
 
 =item * RT: CPAN's request tracker (report bugs here)
 
@@ -699,7 +706,7 @@ L<https://metacpan.org/release/Bio-RNA-BarMap>
 
 =head1 LICENSE AND COPYRIGHT
 
-Copyright 2019 Felix Kuehnl.
+Copyright 2019-2021 Felix Kuehnl.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
