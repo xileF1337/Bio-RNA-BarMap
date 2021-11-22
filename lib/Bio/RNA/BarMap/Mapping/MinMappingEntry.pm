@@ -12,6 +12,8 @@ use namespace::autoclean;
 use Scalar::Util qw( weaken );
 
 use Bio::RNA::BarMap::Mapping::Type;
+use Bio::RNA::BarMap::Mapping::Set;
+
 
 has 'index' => (is => 'ro', required => 1);
 

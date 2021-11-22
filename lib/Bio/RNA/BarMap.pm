@@ -5,10 +5,7 @@ use 5.012;
 use warnings;
 
 use Bio::RNA::BarMap::Mapping;
-use Bio::RNA::BarMap::Mapping::Set;
-use Bio::RNA::BarMap::Mapping::MinMappingEntry;
 use Bio::RNA::BarMap::Mapping::Type;
-use Bio::RNA::BarMap::Mapping::FileMappingEntry;
 
 1;
 

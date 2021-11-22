@@ -13,6 +13,9 @@ use Scalar::Util qw(reftype);
 use List::Util qw(any);
 use File::Spec;
 
+use Bio::RNA::BarMap::Mapping::MinMappingEntry;
+use Bio::RNA::BarMap::Mapping::FileMappingEntry;
+
 
 # Hash mapping each minimum to the one it is mapped to in the next landscape.
 has '_min_mapping' => (
