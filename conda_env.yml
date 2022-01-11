@@ -10,7 +10,7 @@ dependencies:
   - perl-file-spec
   - perl-module-build
   - perl-moose
-  # - perl-moosex-strictconstructor
+  - perl-moosex-strictconstructor
   - perl-namespace-autoclean
   - perl-ipc-system-simple
   - perl-scalar-list-utils
